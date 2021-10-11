@@ -1,0 +1,440 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+/*
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+*/
+
+//buildscript {
+//    repositories {
+//        maven { url 'https://maven.fabric.io/public' }
+//    }
+//
+//    dependencies {
+//        classpath 'io.fabric.tools:gradle:1.28.1'
+//    }
+//}
+
+plugins {
+    id 'com.android.application'
+}
+//apply plugin: 'com.android.application'
+//apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+
+repositories {
+    //maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
+    maven {
+        url "http://dl.bintray.com/lukaville/maven"
+    }
+}
+
+//configurations {
+//    all*.exclude group: 'com.android.support', module: 'support-v4'
+//}
+
+android {
+    compileSdkVersion 30
+    //buildToolsVersion "30.0.3"
+//    buildToolsVersion "21.1.2"
+//    buildToolsVersion = "23.0.1"
+//    buildToolsVersion = "23.0.2"
+
+    defaultConfig {
+        applicationId "com.MetaConsumer.Optix.internal"
+        minSdkVersion 23
+        targetSdkVersion 30
+        versionCode 103
+        versionName "1.12.2"
+        multiDexEnabled = true
+    }
+    compileOptions {
+        // Support for Java 8 features
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField "boolean", "LOG", "true"
+            buildConfigField "boolean", "DEBUG_TEST_FLAG", "true"
+            buildConfigField "boolean", "CONST_TEST_RELEASE", "true"
+
+            buildConfigField "int", "CONST_STATUS_RECORD_INTERVAL_SECONDS", "60"
+            buildConfigField "boolean", "CONST_FOREGROUND_APP_DETECTION_FIXED_INTERVAL", "true"
+
+            buildConfigField "boolean", "CAPTURE_STATUS_RECORDS", "true"
+            buildConfigField "boolean", "CLIENT_SIDE_NOTIFICATIONS_ON", "true"
+            buildConfigField "boolean", "GPS_TRACKING_ON", "true"
+
+            buildConfigField "boolean", "CONST_FOREGROUND_APP_DETECTION_ON", "true"
+            buildConfigField "boolean", "CONST_SCREENSHOT_JPG_COMPRESSION_ON", "true"
+            buildConfigField "boolean", "CONST_DUP_DETECTION_ON", "false"
+            buildConfigField "boolean", "CONST_FAST_DUP_DETECTION_ON", "true"
+            buildConfigField "boolean", "CONST_XOR_ENCODING_ON", "false"
+            buildConfigField "boolean", "CONST_FAST_XOR_ENCODING_ON", "false"
+
+            buildConfigField "String", "CONST_OPTIX_API_BASE_URI", '"optix-indo-dev.metaconsumer.com/api"'
+            buildConfigField "String", "CONST_OPTIX_API_BASE_URI_TEST", '"https://optix-indo-dev.metaconsumer.com/"'
+            buildConfigField "String", "CONST_OPTIX_HTTP_METHOD", '"https"'
+            buildConfigField "String", "CONST_OPTIX_API_VERSION", '"v1"'
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "boolean", "LOG", "false"
+            buildConfigField "boolean", "DEBUG_TEST_FLAG", "false"
+            buildConfigField "boolean", "CONST_TEST_RELEASE", "false"
+
+            buildConfigField "int", "CONST_STATUS_RECORD_INTERVAL_SECONDS", "60"
+            buildConfigField "boolean", "CONST_FOREGROUND_APP_DETECTION_FIXED_INTERVAL", "true"
+
+            buildConfigField "boolean", "CAPTURE_STATUS_RECORDS", "true"
+            buildConfigField "boolean", "CLIENT_SIDE_NOTIFICATIONS_ON", "true"
+            buildConfigField "boolean", "GPS_TRACKING_ON", "true"
+
+            buildConfigField "boolean", "CONST_FOREGROUND_APP_DETECTION_ON", "true"
+            buildConfigField "boolean", "CONST_SCREENSHOT_JPG_COMPRESSION_ON", "true"
+            buildConfigField "boolean", "CONST_DUP_DETECTION_ON", "false"
+            buildConfigField "boolean", "CONST_FAST_DUP_DETECTION_ON", "true"
+            buildConfigField "boolean", "CONST_XOR_ENCODING_ON", "false"
+            buildConfigField "boolean", "CONST_FAST_XOR_ENCODING_ON", "true"
+
+
+            buildConfigField "String", "CONST_OPTIX_API_BASE_URI", '"optix-indo-dev.metaconsumer.com/api"'
+            buildConfigField "String", "CONST_OPTIX_API_BASE_URI_TEST", '"https://optix-indo-dev.metaconsumer.com/"'
+            buildConfigField "String", "CONST_OPTIX_HTTP_METHOD", '"https"'
+            buildConfigField "String", "CONST_OPTIX_API_VERSION", '"v1"'
+
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        // pickFirst '/home/vijay/.gradle/caches/modules-2/files-2.1/joda-time/joda-time/2.2/a5f29a7acaddea3f4af307e8cf2d0cc82645fd7d/joda-time-2.2.jar'
+        // pickFirst '/home/vijay/.gradle/caches/modules-2/files-2.1/commons-lang/commons-lang/2.6/ce1edb914c94ebc388f086c6827e8bdeec71ac2/commons-lang-2.6.jar'
+        // exclude 'META-INF/maven/org.bytedeco.javacpp-presets/ffmpeg/pom.properties'
+        // exclude 'META-INF/maven/org.bytedeco.javacpp-presets/ffmpeg/pom.xml'
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/java/com/Optinera/Optix/json_pojo/'
+    }
+
+
+    dexOptions {
+     //   incremental true
+        javaMaxHeapSize "4g"
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/java/com/Optinera/Optix/json_pojo/'
+    }
+
+
+    dexOptions {
+     //   incremental true
+        javaMaxHeapSize "4g"
+    }
+    //---------------------------------------------------------------------------------------------------
+    // for debug/test (till lines end)
+    //---------------------------------------------------------------------------------------------------
+    // copying files to jniLib, all .so files need to be stored there
+    // including pre-compiled ffmpeg arm/x86 so's
+
+    // which ones to include based on this article
+    // https://androidbycode.wordpress.com/2015/07/07/android-ndk-a-guide-to-deploying-apps-with-native-libraries/
+    // Note 1: armeabi-v7a can also run armeabi, so ignoring that
+    // Note 2: very few mips devices out there, so ignoring that
+    // Note 3: ignoring x86_64 because 64-bit gives only a small improvement and anyways 32 bit libs are required
+    // Note 4: armeabi-v7a is 7x faster on Google LG Nexus. So, keeping armeabi-v7a
+    task copyNativeLib (type: Copy) {
+        //copy {
+        //    from 'src/main/jniLibs_test/arm64-v8a'
+        //    into 'src/main/jniLibs/arm64-v8a'
+        //}
+        //copy {
+        //    from 'src/main/jniLibs_test/x86_64'
+        //    into 'src/main/jniLibs/x86_64'
+        //}
+        //copy {
+        //    from 'src/main/jniLibs_test/mips64'
+        //    into 'src/main/jniLibs/mips64'
+        //}
+//        copy {
+            from ('src/main/jniLibs_test/armeabi-v7a') {
+        //        exclude 'liblept.so'
+            }
+            into 'src/main/jniLibs/armeabi-v7a'
+//        }
+//        copy {
+            from ('src/main/jniLibs_test/armeabi') {
+        //        exclude 'liblept.so'
+            }
+            into 'src/main/jniLibs/armeabi'
+//        }
+//        copy {
+            from ('src/main/jniLibs_test/x86') {
+        //        exclude 'liblept.so'
+            }
+            into 'src/main/jniLibs/x86'
+//        }
+        //copy {
+        //    from 'src/main/jniLibs_test/mips'
+        //    into 'src/main/jniLibs/mips'
+        //}
+    }
+
+    tasks.withType(JavaCompile) {
+        compileTask -> compileTask.dependsOn(copyNativeLib)
+    }
+    //---------------------------------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------------------------------
+    // for release: uncomment out,
+    //---------------------------------------------------------------------------------------------------
+    //task deleteJniLibsTask << {
+    //    def currJniDir = new File('src/main/jniLibs')
+    //    currJniDir.deleteDir()
+    //}
+    task deleteJniLibsTask(type: Delete) {
+        delete "src/main/jniLibs"
+    }
+
+    tasks.withType(JavaCompile) {
+        compileTask -> compileTask.dependsOn deleteJniLibsTask
+    }
+    //---------------------------------------------------------------------------------------------------
+
+    // not working - trying to make dependency dynamic
+    /*
+    tasks.whenTaskAdded { task ->
+        if (task.name == 'debug') {
+            task.dependsOn copyNativeLib
+        }
+        if (task.name == 'release') {
+            task.dependsOn deleteJniLibsTask
+        }
+    }
+    */
+
+
+    // ndk related
+    // for test, if ndk needs to be compiled for debugging purposes, comment out rest below after this block
+    sourceSets.main {
+        // The next line only includes .so files from src/main/libs, ignoring all other folders
+        // jar files in Optix/libs/ folder (ffmpeg, etc) were getting ignored, causing app to fail w/ UnsatisfiedLinker errors
+        // jniLibs.srcDir 'src/main/libs' //set .so files directory to libs
+        jni.srcDirs = [] //disable automatic ndk-build call
+    }
+
+
+    // Deprecated (to be confirmed) !
+    // No NDK compilation happens here anymore (check this !)
+    // everything happens in ~/optix-android/AndroidStudioProjects/OptixJNI/
+    // If ndk is used, it still needs to be moved into jniLibs with block copyNativeLib below
+
+    /*
+    task ndkBuild(type: Exec) {
+        // set windows path here
+        if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+            // TODO: add commands for windows machine
+            // commandLine '/home/vijay/ndk/android-ndk-r10e/ndk-build.cmd', '-C', file('src/main').absolutePath
+        } else {
+            commandLine '/home/vijay/ndk/android-ndk-r10e/ndk-build', '-C', file('src/main').absolutePath
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        compileTask -> compileTask.dependsOn ndkBuild
+    }
+    */
+
+    /*
+    // copying files to jniLib, all .so files need to be stored there
+    // including pre-compiled ffmpeg arm/x86 so's, which haven't been added
+    task copyNativeLib << {
+        copy {
+            from 'src/main/libs/arm64-v8a'
+            into 'src/main/jniLibs/arm64-v8a'
+        }
+        copy {
+            from 'src/main/libs/x86_64'
+            into 'src/main/jniLibs/x86_64'
+        }
+        copy {
+            from 'src/main/libs/mips64'
+            into 'src/main/jniLibs/mips64'
+        }
+        copy {
+            from 'src/main/libs/armeabi-v7a'
+            into 'src/main/jniLibs/armeabi-v7a'
+        }
+        copy {
+            from 'src/main/libs/armeabi'
+            into 'src/main/jniLibs/armeabi'
+        }
+        copy {
+            from 'src/main/libs/x86'
+            into 'src/main/jniLibs/x86'
+        }
+        copy {
+            from 'src/main/libs/mips'
+            into 'src/main/jniLibs/mips'
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        compileTask -> compileTask.dependsOn(copyNativeLib)
+    }
+    */
+
+
+
+}
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //compile fileTree(dir: 'libs', include: 'native-libs.jar')
+
+    // implementation 'com.android.support:appcompat-v7:23.1.1'
+
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+
+    implementation 'com.google.android.material:material:1.2.1'
+
+    // ui related (butterknife)
+    implementation 'com.jakewharton:butterknife:7.0.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    annotationProcessor 'com.jakewharton:butterknife:7.0.1'
+
+    // retrofit
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
+    implementation 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+    implementation 'com.squareup.okhttp:logging-interceptor:2.7.5'
+    // compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+
+    // miscallaneous
+    implementation 'commons-lang:commons-lang:2.6'
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.1'
+    implementation 'joda-time:joda-time:2.2'
+    implementation 'org.glassfish:javax.annotation:10.0-b28'
+
+    // crashlytics
+//    implementation('com.crashlytics.sdk.android:crashlytics:17.2.2@aar') {
+//        transitive = true;
+//    }
+    //implementation 'com.google.firebase:firebase-crashlytics:17.1.0'
+   // implementation 'com.google.firebase:firebase-analytics:17.5.0'
+
+    implementation platform('com.google.firebase:firebase-bom:27.0.0')
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-messaging'
+
+    // calendar
+    // compile project(':caldroid')
+    //implementation 'com.roomorama:caldroid:3.0.1'
+    implementation 'com.github.vpotvin:caldroidx:1.0'
+    // http client
+    // compile "org.apache.httpcomponents:httpmime:4.3.2"
+
+    // others
+    //implementation 'com.google.android.gms:play-services-appindexing:8.1.0'
+    // for unzipping
+
+    // commons
+    implementation 'commons-io:commons-io:2.6'
+    implementation 'org.apache.commons:commons-compress:1.20'
+
+    // ffmpeg
+
+    // correct (but does not work for marshmallow)
+    // all placed directly in ~/optix-android-release/Optix/libs/
+    /*
+    // implementation group: 'org.bytedeco', name: 'javacv', version: '1.0'
+    // implementation group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: '2.6.1-0.11', classifier: 'android-arm'
+    // implementation group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: '2.6.1-0.11', classifier: 'android-x86'
+    */
+
+    // multidex
+
+    // implementation 'com.android.support:multidex:1.0.0'
+
+    // google cloud messaging
+    //implementation 'com.google.android.gms:play-services:8.3.0'
+
+    // aws services
+    implementation 'com.amazonaws:aws-android-sdk-s3:2.22.1'
+    implementation 'com.amazonaws:aws-android-sdk-core:2.7.4'
+    implementation 'com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.7.0'
+
+    // Amplify core dependency
+    implementation 'com.amplifyframework:aws-auth-cognito:1.16.11'
+    implementation 'com.amplifyframework:core:1.16.11'
+    //For AWSMobileClient
+    implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.22.1'
+
+    // Cognito UserPools for SignIn
+    implementation 'com.amazonaws:aws-android-sdk-auth-userpools:2.22.1'
+
+    //For the drop-in UI :
+    implementation 'com.amazonaws:aws-android-sdk-auth-ui:2.22.1'
+    // Support for Java 8 features
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.1'
+
+    // help stack
+    implementation project(':helpstack')
+    // implementation 'com.tenmiles:helpstack:1.2.0'
+
+    // all placed directly in ~/optix-android-release/Optix/libs/
+    /*
+    implementation files('libs/ffmpeg-3.0-1.2-20160319.153943-2-android-arm.jar')
+    implementation files('libs/ffmpeg-3.0-1.2-20160319.153943-2-android-x86.jar')
+    implementation files('libs/ffmpeg-3.0-1.2-20160319.153943-2-sources.jar')
+    implementation files('libs/ffmpeg-3.0-1.2-20160319.153943-2.jar')
+    implementation files('libs/javacpp-1.2-20160417.144017-9.jar')
+    implementation files('libs/javacv-1.2-20160319.154745-3.jar')
+    */
+
+    implementation 'com.android.installreferrer:installreferrer:2.2'
+
+    // firebase
+    // implementation 'com.google.firebase:firebase-core:16.0.9'
+    //implementation "com.google.firebase:firebase-messaging:15.0.2"
+    //implementation 'com.google.firebase:firebase-core:15.0.0'
+    //implementation 'com.google.firebase:firebase-messaging:17.6.0'
+    //implementation 'com.google.firebase:firebase-messaging:21.0.1'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.android.material:material:1.2.1'
+}
+
+
+apply plugin: 'com.google.gms.google-services'
